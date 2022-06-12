@@ -1,6 +1,4 @@
 """
-Jabriel Seah 211973E Group 02
-
 Timsort Function
 ----------------
 As the sorting functions are tailored for the project,
@@ -12,8 +10,7 @@ At least it was worth the trouble, I had fun doing it :P
 It's performance was clearly above regular sorts,
 especially when the array is partially sorted.
 
-Timsort really performs tremendously better then regular merge sort
-My test code for verifying that is in test_tim.py
+Timsort really performs tremendously better then regular merge sort.
 
 Resources I had to go through to understand timsort:
 (This is but just half of it)
@@ -41,7 +38,7 @@ from .misc import greater_than, less_than
 MIN_GALLOP = 7  # Minimum wins to gallop
 
 
-def with_merge_at(array:list, key:str, reverse:bool=False) -> None:
+def timsort(array:list, key:str, reverse:bool=False) -> None:
     """ Sorts an array using timsort algorithm """
 
     n = len(array)  # Length of array
@@ -278,6 +275,7 @@ def merge_at(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
     found_index = gallop_A_left(array, key, array[s2-1][key], s2+n2-1, n2, reverse=reverse)
     n2 = found_index - s2
 
+    # Merges runs
     if n1 <= n2:
         return merge_lo(array, key, s1, n1, s2, n2, min_gallop, reverse=reverse)
     else:
