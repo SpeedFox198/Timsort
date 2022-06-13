@@ -32,13 +32,12 @@ Here, some beautiful looking text:
 ░░░██║░░░██║██║░╚═╝░██║██████╔╝╚█████╔╝██║░░██║░░░██║░░░
 ░░░╚═╝░░░╚═╝╚═╝░░░░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░
 """
-from .misc import greater_than, less_than
 
 
 MIN_GALLOP = 7  # Minimum wins to gallop
 
 
-def timsort(array:list, key:str, reverse:bool=False) -> None:
+def timsort(array:list, key=None, reverse:bool=False) -> None:
     """ Sorts an array using timsort algorithm """
 
     n = len(array)  # Length of array
@@ -115,6 +114,36 @@ def timsort(array:list, key:str, reverse:bool=False) -> None:
         # Calculate new low and count
         curr_low = prev_low
         curr_count += prev_count
+
+
+def less_than(x, y, key=None, reverse:bool=False) -> bool:
+    """ Returns True if x is less than y """
+
+    # Call function if provided
+    if key is not None:
+        x = key(x)
+        y = key(y)
+
+    # Reverse process if reversed
+    if reverse:
+        return x > y
+    else:
+        return x < y
+
+
+def greater_than(x, y, key=None, reverse:bool=False) -> bool:
+    """ Returns True if x is greater than y """
+
+    # Call function if provided
+    if key is not None:
+        x = key(x)
+        y = key(y)
+
+    # Reverse process if reversed
+    if reverse:
+        return x < y
+    else:
+        return x > y
 
 
 def compute_minrun(n:int) -> int:
