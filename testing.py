@@ -16,12 +16,9 @@ import random
 def test(func, original_array, display, key=None, reverse=False, output_error=True):
     array = original_array.copy()
     sorted_array = sorted(array, key=key, reverse=reverse)
-    kwargs = {}
-    if key is not None: kwargs["key"] = key
-    if reverse: kwargs["reverse"] = reverse
     try:
         start = timer()
-        func(array, **kwargs)
+        func(array, key=key, reverse=reverse)
         end = timer()
     except IndexError as e:
         if output_error:
