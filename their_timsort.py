@@ -1,5 +1,5 @@
 # This timsort was implemented using the same algorithm as
-# the most common online implementations
+# the most common online implementations of timsort
 # e.g. https://www.geeksforgeeks.org/timsort/
 # It does not contain the real features of the
 # actual imsort algorithm

@@ -5,13 +5,8 @@ Testing Timsort
 ---------------
 Here we push timsort to the limits and test it
 After testing, my implementation of timsort was the clear winner :)
-
-NOTE:
-- Relative imports will need to be edited to prevent import errors
-- The usage of greater_than and less_than has caused a huge function overhead
-- Previous testing had yielded much greater differences in speed when the functions weren't used
-- However the usage of the functions are necessary as we need to compare both strings and numbers
 """
+from merge_sort import merge_sort
 from their_timsort import timsort as their_timsort
 from count_runs import timsort as merges_natural_runs
 from gallops import timsort as with_galloping
@@ -19,55 +14,6 @@ from timsort import timsort
 from timeit import default_timer as timer
 import random
 
-# The above imports my implementation of timsort
-
-
-
-
-# The below is an implementation of mergesort directly gotten from geeks4geeks
-# https://www.geeksforgeeks.org/merge-sort/
-'''
-def mergeSort(arr, key):
-    if len(arr) > 1:
-
-         # Finding the mid of the array
-        mid = len(arr)//2
-
-        # Dividing the array elements
-        L = arr[:mid]
-
-        # into 2 halves
-        R = arr[mid:]
-
-        # Sorting the first half
-        mergeSort(L, key)
-
-        # Sorting the second half
-        mergeSort(R, key)
-
-        i = j = k = 0
-
-        # Copy data to temp arrays L[] and R[]
-        while i < len(L) and j < len(R):
-            if less_than(L[i][key], R[j][key]):
-                arr[k] = L[i]
-                i += 1
-            else:
-                arr[k] = R[j]
-                j += 1
-            k += 1
-
-        # Checking if any element was left
-        while i < len(L):
-            arr[k] = L[i]
-            i += 1
-            k += 1
-
-        while j < len(R):
-            arr[k] = R[j]
-            j += 1
-            k += 1
-'''
 
 def test(func, original_array, display, key=None, reverse=False, output_error=True):
     array = original_array.copy()
@@ -85,7 +31,7 @@ def test(func, original_array, display, key=None, reverse=False, output_error=Tr
                 f.write(f"{original_array}\n")
         raise IndexError(e)
     is_sorted = array == sorted_array
-    print(f"({'XO'[is_sorted]}) {display:<50} {end-start}")
+    print(f"({'XO'[is_sorted]}) {display:<35} {end-start}")
     if not is_sorted and output_error:
         with open("error.log", mode="a") as f:
             f.write(f"{original_array}\n")
@@ -97,15 +43,16 @@ n = 100000  # Length of array
 rate_of_unsortedness = 1000  # The larger the value, the more sorted partially_sorted is
 range_of_numbers = 10000
 # Produce arrays for testing
-partially_sorted = [(1,2)[not random.randint(0, rate_of_unsortedness)]*i for i in range(n)]
+partially_sorted = [i*(1,2)[not random.randint(0, rate_of_unsortedness)] for i in range(n)]
 completely_random = [random.randint(0, range_of_numbers) for _ in range(n)]
 
 # Functions to be tested
 functions = {
-    "their timsort":their_timsort,
-    "merges natural runs":merges_natural_runs,
-    "with galloping":with_galloping,
-    "final timsort (with merge_at)":timsort
+    "merge sort": merge_sort,
+    "their timsort": their_timsort,
+    "merges natural runs": merges_natural_runs,
+    "with galloping": with_galloping,
+    "final timsort (with merge_at)": timsort
 }.items()  # LOL
 
 # Print Length of array
