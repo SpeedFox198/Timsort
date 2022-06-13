@@ -334,22 +334,22 @@ def merge_hi(array:list, s1:int, n1:int, s2:int, n2:int, key=None, reverse:bool=
     k = s2+n2-1  # Pointer for merging runs
 
     # Merge (copy) till either pointer i or j goes out of range
-    while i < n1 and j < s2+n2:
+    while i >= s1 and j >= 0:
 
-        # If B[j] < A[i]
-        if less_than(array[j], temp[i], key=key, reverse=reverse):
-            array[k] = array[j]
-            j += 1
+        # Else A[i] > B[j]
+        if greater_than(array[i], temp[j], key=key, reverse=reverse):
+            array[k] = array[i]
+            i -= 1
 
-        # Else A[i] <= B[j]
+        # Else B[j] >= A[i]
         else:
-            array[k] = temp[i]
-            i += 1
+            array[k] = temp[j]
+            j -= 1
 
-        k += 1
+        k -= 1
 
     # Copy temp content into array if any
-    while i < n1:
-        array[k] = temp[i]
-        i += 1
-        k += 1
+    while j >= 0:
+        array[k] = temp[j]
+        j -= 1
+        k -= 1

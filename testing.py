@@ -12,8 +12,9 @@ NOTE:
 - Previous testing had yielded much greater differences in speed when the functions weren't used
 - However the usage of the functions are necessary as we need to compare both strings and numbers
 """
-from timsort import timsort
+from count_runs import timsort as merges_natural_runs
 from gallops import timsort as with_galloping
+from timsort import timsort
 from timeit import default_timer as timer
 import random
 
@@ -199,7 +200,7 @@ range_of_numbers = 10000
 partially_sorted = [(1,2)[not random.randint(0, rate_of_unsortedness)]*i for i in range(n)]
 completely_random = [random.randint(0, range_of_numbers) for _ in range(n)]
 
-functions = (with_galloping, timsort)  # Fucntions to be tested
+functions = (merges_natural_runs, with_galloping, timsort)  # Functions to be tested
 
 # Print Length of array
 print("Sorting array of length", n)
