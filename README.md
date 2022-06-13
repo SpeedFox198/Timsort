@@ -19,4 +19,4 @@ The actual completed implementation is in the file [timsort.py](/timsort.py)
 - [testing.py](/testing.py) - used for testing the sorting algorithms to see their performance
 
 ![希儿死了](/assets/seele_death.png)  
-Murdered by timsorts
+Murdered by timsort
