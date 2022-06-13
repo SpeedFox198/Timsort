@@ -1,36 +1,17 @@
 """
-Timsort Function
-----------------
-As the sorting functions are tailored for the project,
-a key is needed to access the value in the dictionaries in the list of records.
-
-Timsort, a sorting algorithm that took me over a week to implement
-At least it was worth the trouble, I had fun doing it :P
-
-It's performance was clearly above regular sorts,
-especially when the array is partially sorted.
-
-Timsort really performs tremendously better then regular merge sort.
-
-Resources I had to go through to understand timsort:
-(This is but just half of it)
-- https://hackernoon.com/timsort-the-fastest-sorting-algorithm-youve-never-heard-of-36b28417f399
-- https://www.geeksforgeeks.org/timsort/
-- https://medium.com/@rscheiwe/the-case-for-timsort-349d5ce1e414
-- https://github.com/python/cpython/blob/main/Objects/listsort.txt
-- https://github.com/python/cpython/blob/main/Objects/listobject.c
-- https://www.wild-inter.net/publications/munro-wild-2018
-- https://www.youtube.com/watch?v=snYTAyyR4VE
-- https://www.youtube.com/watch?v=Yk4CBisILaw
-- https://www.youtube.com/watch?v=o8y9uYygLcw
-
-Here, some beautiful looking text:
 ████████╗██╗███╗░░░███╗░██████╗░█████╗░██████╗░████████╗
 ╚══██╔══╝██║████╗░████║██╔════╝██╔══██╗██╔══██╗╚══██╔══╝
 ░░░██║░░░██║██╔████╔██║╚█████╗░██║░░██║██████╔╝░░░██║░░░
 ░░░██║░░░██║██║╚██╔╝██║░╚═══██╗██║░░██║██╔══██╗░░░██║░░░
 ░░░██║░░░██║██║░╚═╝░██║██████╔╝╚█████╔╝██║░░██║░░░██║░░░
 ░░░╚═╝░░░╚═╝╚═╝░░░░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░
+
+This is my ver 3.0 of timsort.
+In this version I've implemented the `merge_at` function.
+
+Interesting to take note is that, by having an extra
+overhead (the `merge_at` function), this version sorts
+partially sorted array a little bit faster than ver 2.0
 """
 
 

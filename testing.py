@@ -1,6 +1,4 @@
 """
-Jabriel Seah 211973E Group 02
-
 Testing Timsort
 ---------------
 Here we push timsort to the limits and test it
