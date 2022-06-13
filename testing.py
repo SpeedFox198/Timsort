@@ -13,6 +13,7 @@ NOTE:
 - However the usage of the functions are necessary as we need to compare both strings and numbers
 """
 from timsort import timsort
+from gallops import timsort as with_galloping
 from timeit import default_timer as timer
 import random
 
