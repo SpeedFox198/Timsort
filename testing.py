@@ -199,25 +199,31 @@ range_of_numbers = 10000
 partially_sorted = [(1,2)[not random.randint(0, rate_of_unsortedness)]*i for i in range(n)]
 completely_random = [random.randint(0, range_of_numbers) for _ in range(n)]
 
+functions = (with_galloping, timsort)  # Fucntions to be tested
+
 # Print Length of array
 print("Sorting array of length", n)
 
 # Test on completely random arrays
 print("Completely Random:")
-for sort_func in (timsort,):
+for sort_func in functions:
     test(sort_func, completely_random)
 
 # Test on partially sorted arrays
 print("Partially Sorted:")
-for sort_func in (timsort,):
+for sort_func in functions:
     test(sort_func, partially_sorted)
 
 
 # Test on reverse functionality
 print("\nReverse sort:\n")
 
+# Test on completely random arrays
 print("Completely Random:")
-test(timsort, completely_random, reverse=True)
+for sort_func in functions:
+    test(sort_func, completely_random, reverse=True)
 
+# Test on partially sorted arrays
 print("Partially Sorted:")
-test(timsort, partially_sorted, reverse=True)
+for sort_func in functions:
+    test(sort_func, partially_sorted, reverse=True)
