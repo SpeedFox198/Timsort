@@ -1,8 +1,8 @@
 # This timsort was implemented using the same algorithm as
 # the most common online implementations of timsort
 # e.g. https://www.geeksforgeeks.org/timsort/
-# It does not contain the real features of the
-# actual imsort algorithm
+# It does not contain all the features of the
+# actual timsort algorithm
 
 
 def timsort(array:list, key=None, reverse:bool=False) -> None:
