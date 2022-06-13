@@ -64,7 +64,7 @@ def timsort(array:list, key=None, reverse:bool=False) -> None:
         # If length of run is less than minrun, extend run
         if count < min_run:
             force = min(min_run, remaining)  # Length to force size of run into
-            bin_insertion_sort(array, key, low, low+force-1, reverse=reverse)
+            bin_insertion_sort(array, low, low+force-1, key=key, reverse=reverse)
             count = force
 
         # Store value of current low and count
@@ -150,7 +150,7 @@ def compute_minrun(n:int) -> int:
     """ Computes and return the minimum length of a run from 16 - 32 """
 
     # As python implemetation of insertion sort is not fast enough
-    # A minrun of value 32 is chosen instead of the original 64    
+    # minrun is from range 16 to 32 instead of range 32 to 64
 
     r = 0  # Becomes 1 if any 1 bits are shifted off
 
@@ -191,7 +191,7 @@ def powerloop(s1:int, n1:int, n2:int, n:int) -> int:
     return power
 
 
-def bin_insertion_sort(array:list, key:str, start:int, end:int, reverse:bool=False) -> None:
+def bin_insertion_sort(array:list, start:int, end:int, key=None, reverse:bool=False) -> None:
     """ Sorts an array using binary insertion sort algorithm """
 
     # Go through the elements and make comparisions
@@ -202,7 +202,7 @@ def bin_insertion_sort(array:list, key:str, start:int, end:int, reverse:bool=Fal
         j = i-1  # Index of element left of current element
 
         # Get index of position to insert element in
-        pos = bin_search(array, key, e[key], start, j, reverse=reverse)
+        pos = bin_search(array, e, start, j, key=key, reverse=reverse)
 
         # Shift elements to the right to perform insertion
         while j >= pos:
@@ -213,7 +213,7 @@ def bin_insertion_sort(array:list, key:str, start:int, end:int, reverse:bool=Fal
         array[j+1] = e
 
 
-def bin_search(array:list, key:str, target, low:int, high:int, reverse:bool=False) -> int:
+def bin_search(array:list, target, low:int, high:int, key=None, reverse:bool=False) -> int:
     """ Binary searches the subarray for the index to insert element """
 
     # Loop till index out of range
@@ -222,11 +222,11 @@ def bin_search(array:list, key:str, target, low:int, high:int, reverse:bool=Fals
         mid = (low + high) >> 1  # Index of middle element
 
         # If middle element is less than target
-        if less_than(array[mid][key], target, reverse=reverse):
+        if less_than(array[mid], target, key=key, reverse=reverse):
             low = mid + 1
 
         # If middle element is more than target
-        elif greater_than(array[mid][key], target, reverse=reverse):
+        elif greater_than(array[mid], target, key=key, reverse=reverse):
             high = mid - 1
 
         # If middle element matches target
@@ -250,13 +250,13 @@ def count_run(array:list, key:str, low:int, high:int, reverse:bool=False) -> tup
     low += 1
 
     # If run is strictly decreasing
-    if less_than(array[low][key], array[low-1][key], reverse=reverse):
+    if less_than(array[low], array[low-1], key=key, reverse=reverse):
 
         # Count length of natural run
         for i in range(low+1, high+1):
 
             # Break if is increasing
-            if less_than(array[i][key], array[i-1][key], reverse=reverse):
+            if less_than(array[i], array[i-1], key=key, reverse=reverse):
                 count += 1
             else:
                 break
@@ -271,7 +271,7 @@ def count_run(array:list, key:str, low:int, high:int, reverse:bool=False) -> tup
         for i in range(low+1, high+1):
 
             # Break if is decreasing
-            if less_than(array[i][key], array[i-1][key], reverse=reverse):
+            if less_than(array[i], array[i-1], key=key, reverse=reverse):
                 break
             else:
                 count += 1
@@ -292,7 +292,7 @@ def merge_at(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
     """ Merges two runs A and B at index s1 and s2 with length n1 and n2 """
 
     # Find where B[0] start in A (elements in A before that are already in place)
-    found_index = gallop_B_right(array, key, array[s2][key], s1, n1, reverse=reverse)
+    found_index = gallop_B_right(array, key, array[s2], s1, n1, reverse=reverse)
     n1 -= found_index - s1
     s1 = found_index
 
@@ -301,7 +301,7 @@ def merge_at(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         return min_gallop
 
     # Find where A[-1] end in B (elements in B after that are already in place)
-    found_index = gallop_A_left(array, key, array[s2-1][key], s2+n2-1, n2, reverse=reverse)
+    found_index = gallop_A_left(array, key, array[s2-1], s2+n2-1, n2, reverse=reverse)
     n2 = found_index - s2
 
     # Merges runs
@@ -336,7 +336,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         while True:
 
             # If B[j] < A[i] (B won)
-            if less_than(array[j][key], temp[i][key], reverse=reverse):
+            if less_than(array[j], temp[i], key=key, reverse=reverse):
                 array[k] = array[j]
                 j += 1
 
@@ -382,7 +382,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
             min_gallop -= min_gallop > 1  # Make it easier to enter galloping mode
 
             # Find B[j] in A
-            found_index = gallop_B_right(temp, key, array[j][key], i, n1-i, reverse=reverse)
+            found_index = gallop_B_right(temp, key, array[j], i, n1-i, reverse=reverse)
 
             # Get a_count
             a_count = found_index - i
@@ -408,7 +408,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
                 return min_gallop  # Return new value of min_gallop
 
             # Find A[i] in B
-            found_index = gallop_A_right(array, key, temp[i][key], j, s2+n2-j, reverse=reverse)
+            found_index = gallop_A_right(array, key, temp[i], j, s2+n2-j, reverse=reverse)
 
             # Get b_count
             b_count = found_index - j
@@ -462,7 +462,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         while True:
 
             # If A[i] > B[j] (A won)
-            if greater_than(array[i][key], temp[j][key], reverse=reverse):
+            if greater_than(array[i], temp[j], key=key, reverse=reverse):
                 array[k] = array[i]
                 i -= 1
 
@@ -508,7 +508,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
             min_gallop -= min_gallop > 1  # Make it easier to enter galloping mode
 
             # Find B[j] in A
-            found_index = gallop_B_left(array, key, temp[j][key], i, i-s1, reverse=reverse)
+            found_index = gallop_B_left(array, key, temp[j], i, i-s1, reverse=reverse)
 
             # Get a_count
             a_count = i - found_index + 1
@@ -535,7 +535,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
                 return min_gallop  # Return new value of min_gallop
 
             # Find A[i] in B
-            found_index = gallop_A_left(temp, key, array[i][key], j, j, reverse=reverse)
+            found_index = gallop_A_left(temp, key, array[i], j, j, reverse=reverse)
 
             # Get b_count
             b_count = j - found_index + 1
@@ -570,11 +570,11 @@ def gallop_A_right(run:list, key:str, target, index:int, max_offset:int, reverse
     offset = 1       # Value of current offset (high boundary in binary search)
 
     # If target is less than or equals to first element of run
-    if not greater_than(target, run[index][key], reverse=reverse):
+    if not greater_than(target, run[index], key=key, reverse=reverse):
         return index  # Return index to insert element
 
     # Gallop till run[index + prev_offset] < target <= run[index + offset]
-    while offset < max_offset and less_than(run[index+offset][key], target, reverse=reverse):
+    while offset < max_offset and less_than(run[index+offset], target, key=key, reverse=reverse):
         prev_offset = offset        # Set previous offset value
         offset = (offset << 1) + 1  # Increase offset
 
@@ -589,7 +589,7 @@ def gallop_A_right(run:list, key:str, target, index:int, max_offset:int, reverse
     # Binary search for position
     while prev_offset < offset:
         mid = (prev_offset + offset) >> 1
-        if less_than(run[mid][key], target, reverse=reverse):
+        if less_than(run[mid], target, key=key, reverse=reverse):
             prev_offset = mid + 1
         else:
             offset = mid
@@ -604,11 +604,11 @@ def gallop_A_left(run:list, key:str, target, index:int, max_offset:int, reverse:
     offset = 1       # Value of current offset (high boundary in binary search)
 
     # If target is greater than last element of run
-    if greater_than(target, run[index][key], reverse=reverse):
+    if greater_than(target, run[index], key=key, reverse=reverse):
         return index + 1  # Return index to insert element
 
     # Gallop till run[index - offset] < target <= run[index - prev_offset]
-    while offset < max_offset and not less_than(run[index-offset][key], target, reverse=reverse):
+    while offset < max_offset and not less_than(run[index-offset], target, key=key, reverse=reverse):
         prev_offset = offset        # Set previous offset value
         offset = (offset << 1) + 1  # Increase offset
 
@@ -622,7 +622,7 @@ def gallop_A_left(run:list, key:str, target, index:int, max_offset:int, reverse:
     # Binary search for position
     while prev_offset < offset:
         mid = (prev_offset + offset) >> 1
-        if less_than(run[mid][key], target, reverse=reverse):
+        if less_than(run[mid], target, key=key, reverse=reverse):
             prev_offset = mid + 1
         else:
             offset = mid
@@ -637,11 +637,11 @@ def gallop_B_right(run:list, key:str, target, index:int, max_offset:int, reverse
     offset = 1       # Value of current offset (high boundary in binary search)
 
     # If target is less than first element of run
-    if less_than(target, run[index][key], reverse=reverse):
+    if less_than(target, run[index], key=key, reverse=reverse):
         return index
 
     # Gallop till run[index + prev_offset] <= target < run[index + offset]
-    while offset < max_offset and not less_than(target, run[index+offset][key], reverse=reverse):
+    while offset < max_offset and not less_than(target, run[index+offset], key=key, reverse=reverse):
         prev_offset = offset        # Set previous offset value
         offset = (offset << 1) + 1  # Increase offset
 
@@ -656,7 +656,7 @@ def gallop_B_right(run:list, key:str, target, index:int, max_offset:int, reverse
     # Binary search for position
     while prev_offset < offset:
         mid = (prev_offset + offset) >> 1
-        if less_than(target, run[mid][key], reverse=reverse):
+        if less_than(target, run[mid], key=key, reverse=reverse):
             offset = mid
         else:
             prev_offset = mid + 1
@@ -671,11 +671,11 @@ def gallop_B_left(run:list, key:str, target, index:int, max_offset:int, reverse:
     offset = 1       # Value of current offset (high boundary in binary search)
 
     # If target is greater than or eauals to last element of run
-    if not less_than(target, run[index][key], reverse=reverse):
+    if not less_than(target, run[index], key=key, reverse=reverse):
         return index + 1  # Return index to insert element
 
     # Gallop till run[index - offest] <= target < run[index - prev_offset]
-    while offset < max_offset and less_than(target, run[index-offset][key], reverse=reverse):
+    while offset < max_offset and less_than(target, run[index-offset], key=key, reverse=reverse):
         prev_offset = offset        # Set previous offset value
         offset = (offset << 1) + 1  # Increase offset
 
@@ -689,7 +689,7 @@ def gallop_B_left(run:list, key:str, target, index:int, max_offset:int, reverse:
     # Binary search for position
     while prev_offset < offset:
         mid = (prev_offset + offset) >> 1
-        if less_than(target, run[mid][key], reverse=reverse):
+        if less_than(target, run[mid], key=key, reverse=reverse):
             offset = mid
         else:
             prev_offset = mid + 1
