@@ -55,7 +55,7 @@ def timsort(array:list, key=None, reverse:bool=False) -> None:
     while remaining:
 
         # Get length of next run
-        count, decreasing = count_run(array, key, low, low+remaining-1, reverse=reverse)
+        count, decreasing = count_run(array, key, low, low+remaining-1, key=key, reverse=reverse)
 
         # If run is strictly descending, reverse run in-place
         if decreasing:
@@ -84,8 +84,9 @@ def timsort(array:list, key=None, reverse:bool=False) -> None:
 
                 # Merge runs
                 min_gallop = merge_at(
-                    array, key, prev_prev_low, prev_prev_count,
-                    prev_low, prev_count, min_gallop, reverse=reverse
+                    array, prev_prev_low, prev_prev_count,
+                    prev_low, prev_count, min_gallop,
+                    key=key, reverse=reverse
                 )
 
                 runs.pop()  # Remove old prev run from stack
@@ -107,8 +108,9 @@ def timsort(array:list, key=None, reverse:bool=False) -> None:
         
         # Merge runs
         min_gallop = merge_at(
-            array, key, prev_low, prev_count,
-            curr_low, curr_count, min_gallop, reverse=reverse
+            array, prev_low, prev_count,
+            curr_low, curr_count, min_gallop,
+            key=key, reverse=reverse
         )
 
         # Calculate new low and count
@@ -239,7 +241,7 @@ def bin_search(array:list, target, low:int, high:int, key=None, reverse:bool=Fal
     return low
 
 
-def count_run(array:list, key:str, low:int, high:int, reverse:bool=False) -> tuple[int, bool]:
+def count_run(array:list, low:int, high:int, key=None, reverse:bool=False) -> tuple[int, bool]:
     """ Returns the length of the run beginning at low """
 
     # If low is at end of list
@@ -288,11 +290,11 @@ def reverse_run(array:list, low:int, high:int) -> None:
         high -= 1
 
 
-def merge_at(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int, reverse:bool=False) -> int:
+def merge_at(array:list, s1:int, n1:int, s2:int, n2:int, min_gallop:int, key=None, reverse:bool=False) -> int:
     """ Merges two runs A and B at index s1 and s2 with length n1 and n2 """
 
     # Find where B[0] start in A (elements in A before that are already in place)
-    found_index = gallop_B_right(array, key, array[s2], s1, n1, reverse=reverse)
+    found_index = gallop_B_right(array, array[s2], s1, n1, key=key, reverse=reverse)
     n1 -= found_index - s1
     s1 = found_index
 
@@ -301,17 +303,17 @@ def merge_at(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         return min_gallop
 
     # Find where A[-1] end in B (elements in B after that are already in place)
-    found_index = gallop_A_left(array, key, array[s2-1], s2+n2-1, n2, reverse=reverse)
+    found_index = gallop_A_left(array, array[s2-1], s2+n2-1, n2, key=key, reverse=reverse)
     n2 = found_index - s2
 
     # Merges runs
     if n1 <= n2:
-        return merge_lo(array, key, s1, n1, s2, n2, min_gallop, reverse=reverse)
+        return merge_lo(array, s1, n1, s2, n2, min_gallop, key=key, reverse=reverse)
     else:
-        return merge_hi(array, key, s1, n1, s2, n2, min_gallop, reverse=reverse)
+        return merge_hi(array, s1, n1, s2, n2, min_gallop, key=key, reverse=reverse)
 
 
-def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int, reverse:bool=False) -> int:
+def merge_lo(array:list, s1:int, n1:int, s2:int, n2:int, min_gallop:int, key=None, reverse:bool=False) -> int:
     """ Merges two runs A and B at index s1 and s2 with length n1 and n2 where n1 < n2 """
 
     a_count = 0  # Number of times A won in a row
@@ -382,7 +384,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
             min_gallop -= min_gallop > 1  # Make it easier to enter galloping mode
 
             # Find B[j] in A
-            found_index = gallop_B_right(temp, key, array[j], i, n1-i, reverse=reverse)
+            found_index = gallop_B_right(temp, array[j], i, n1-i, key=key, reverse=reverse)
 
             # Get a_count
             a_count = found_index - i
@@ -408,7 +410,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
                 return min_gallop  # Return new value of min_gallop
 
             # Find A[i] in B
-            found_index = gallop_A_right(array, key, temp[i], j, s2+n2-j, reverse=reverse)
+            found_index = gallop_A_right(array, temp[i], j, s2+n2-j, key=key, reverse=reverse)
 
             # Get b_count
             b_count = found_index - j
@@ -437,7 +439,7 @@ def merge_lo(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         min_gallop += 1  # Penalise it for leaving galloping mode
 
 
-def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int, reverse:bool=False) -> int:
+def merge_hi(array:list, s1:int, n1:int, s2:int, n2:int, min_gallop:int, key=None, reverse:bool=False) -> int:
     """ Merges two runs A and B at index s1 and s2 with length n1 and n2 where n1 > n2 """
 
     a_count = 0  # Number of times A won in a row
@@ -508,7 +510,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
             min_gallop -= min_gallop > 1  # Make it easier to enter galloping mode
 
             # Find B[j] in A
-            found_index = gallop_B_left(array, key, temp[j], i, i-s1, reverse=reverse)
+            found_index = gallop_B_left(array, temp[j], i, i-s1, key=key, reverse=reverse)
 
             # Get a_count
             a_count = i - found_index + 1
@@ -535,7 +537,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
                 return min_gallop  # Return new value of min_gallop
 
             # Find A[i] in B
-            found_index = gallop_A_left(temp, key, array[i], j, j, reverse=reverse)
+            found_index = gallop_A_left(temp, array[i], j, j, key=key, reverse=reverse)
 
             # Get b_count
             b_count = j - found_index + 1
@@ -564,7 +566,7 @@ def merge_hi(array:list, key:str, s1:int, n1:int, s2:int, n2:int, min_gallop:int
         min_gallop += 1  # Penalise it for leaving galloping mode
 
 
-def gallop_A_right(run:list, key:str, target, index:int, max_offset:int, reverse:bool=False) -> int:
+def gallop_A_right(run:list, target, index:int, max_offset:int, key=None, reverse:bool=False) -> int:
     """ Gallop right and find position to insert element of run A inside run B """
     prev_offset = 0  # Value of previous offset (low boundary in binary search)
     offset = 1       # Value of current offset (high boundary in binary search)
@@ -598,7 +600,7 @@ def gallop_A_right(run:list, key:str, target, index:int, max_offset:int, reverse
     return offset
 
 
-def gallop_A_left(run:list, key:str, target, index:int, max_offset:int, reverse:bool=False) -> int:
+def gallop_A_left(run:list, target, index:int, max_offset:int, key=None, reverse:bool=False) -> int:
     """ Gallop left and find position to insert element of run A inside run B """
     prev_offset = 0  # Value of previous offset (low boundary in binary search)
     offset = 1       # Value of current offset (high boundary in binary search)
@@ -631,7 +633,7 @@ def gallop_A_left(run:list, key:str, target, index:int, max_offset:int, reverse:
     return offset
 
 
-def gallop_B_right(run:list, key:str, target, index:int, max_offset:int, reverse:bool=False) -> int:
+def gallop_B_right(run:list, target, index:int, max_offset:int, key=None, reverse:bool=False) -> int:
     """ Gallop right and find position to insert element of run B inside run A """
     prev_offset = 0  # Value of previous offset (low boundary in binary search)
     offset = 1       # Value of current offset (high boundary in binary search)
@@ -665,7 +667,7 @@ def gallop_B_right(run:list, key:str, target, index:int, max_offset:int, reverse
     return offset
 
 
-def gallop_B_left(run:list, key:str, target, index:int, max_offset:int, reverse:bool=False) -> int:
+def gallop_B_left(run:list, target, index:int, max_offset:int, key=None, reverse:bool=False) -> int:
     """ Gallop left and find position to insert element of run B inside run A """
     prev_offset = 0  # Value of previous offset (low boundary in binary search)
     offset = 1       # Value of current offset (high boundary in binary search)
