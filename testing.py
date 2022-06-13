@@ -4,10 +4,10 @@ Testing Timsort
 Here we push timsort to the limits and test it
 After testing, my implementation of timsort was the clear winner :)
 """
-from merge_sort import merge_sort
-from their_timsort import timsort as their_timsort
-from count_runs import timsort as merges_natural_runs
-from gallops import timsort as with_galloping
+from others.merge_sort import merge_sort
+from others.their_timsort import timsort as their_timsort
+from others.count_runs import timsort as merges_natural_runs
+from others.gallops import timsort as with_galloping
 from timsort import timsort
 from timeit import default_timer as timer
 import random
