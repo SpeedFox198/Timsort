@@ -12,15 +12,13 @@ NOTE:
 - Previous testing had yielded much greater differences in speed when the functions weren't used
 - However the usage of the functions are necessary as we need to compare both strings and numbers
 """
-from my_package.misc import greater_than, less_than
-from my_package.timsort import timsort as my_timsort
-from my_package.test_gallop import with_galloping as test_tim
+from timsort import timsort
 from timeit import default_timer as timer
 import random
 
 # The above imports my implementation of timsort
 
-
+'''
 # The below codes is the timsort code found in geeks4geeks
 # https://www.geeksforgeeks.org/timsort/
 # I've copied over their code directly and
@@ -167,16 +165,17 @@ def mergeSort(arr, key):
             arr[k] = R[j]
             j += 1
             k += 1
+'''
 
-
-def test(func, original_array, reverse=False, output_error=True):
+def test(func, original_array, key=None, reverse=False, output_error=True):
     array = original_array.copy()
-    sorted_array = sorted(array, key=lambda x:x["key"], reverse=reverse)
-    params = ["key"]
-    if reverse: params.append(reverse)
+    sorted_array = sorted(array, key=key, reverse=reverse)
+    kwargs = {}
+    if key is not None: kwargs["key"] = key
+    if reverse: kwargs["reverse"] = reverse
     try:
         start = timer()
-        func(array, *params)
+        func(array, **kwargs)
         end = timer()
     except IndexError as e:
         if output_error:
@@ -194,22 +193,22 @@ def test(func, original_array, reverse=False, output_error=True):
 # Test codes
 n = 100000  # Length of array
 rate_of_unsortedness = 1000  # The larger the value, the more sorted partially_sorted is
-range_of_numbers = 100
+range_of_numbers = 10000
 # Produce arrays for testing
-partially_sorted = [{"key":(1,2)[not random.randint(0, rate_of_unsortedness)]*i} for i in range(n)]
-completely_random = [{"key":random.randint(0, range_of_numbers)} for _ in range(n)]
+partially_sorted = [(1,2)[not random.randint(0, rate_of_unsortedness)]*i for i in range(n)]
+completely_random = [random.randint(0, range_of_numbers) for _ in range(n)]
 
 # Print Length of array
 print("Sorting array of length", n)
 
 # Test on completely random arrays
 print("Completely Random:")
-for sort_func in (mergeSort, theirTimSort, my_timsort, test_tim):
+for sort_func in (timsort,):
     test(sort_func, completely_random)
 
 # Test on partially sorted arrays
 print("Partially Sorted:")
-for sort_func in (mergeSort, theirTimSort, my_timsort, test_tim):
+for sort_func in (timsort,):
     test(sort_func, partially_sorted)
 
 
@@ -217,9 +216,7 @@ for sort_func in (mergeSort, theirTimSort, my_timsort, test_tim):
 print("\nReverse sort:\n")
 
 print("Completely Random:")
-test(my_timsort, completely_random, True)
-test(test_tim, completely_random, True)
+test(timsort, completely_random, reverse=True)
 
 print("Partially Sorted:")
-test(my_timsort, partially_sorted, True)
-test(test_tim, partially_sorted, True)
+test(timsort, partially_sorted, reverse=True)
