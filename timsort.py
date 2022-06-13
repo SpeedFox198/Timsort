@@ -55,7 +55,7 @@ def timsort(array:list, key=None, reverse:bool=False) -> None:
     while remaining:
 
         # Get length of next run
-        count, decreasing = count_run(array, key, low, low+remaining-1, key=key, reverse=reverse)
+        count, decreasing = count_run(array, low, low+remaining-1, key=key, reverse=reverse)
 
         # If run is strictly descending, reverse run in-place
         if decreasing:
