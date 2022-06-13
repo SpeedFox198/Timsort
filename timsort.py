@@ -8,10 +8,7 @@
 
 This is my ver 3.0 of timsort.
 In this version I've implemented the `merge_at` function.
-
-Interesting to take note is that, by having an extra
-overhead (the `merge_at` function), this version sorts
-partially sorted array a little bit faster than ver 2.0
+This is also the final completed implementation of timsort.
 """
 
 
